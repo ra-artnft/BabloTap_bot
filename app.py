@@ -5,16 +5,14 @@ import requests
 # Ваш токен бота
 TOKEN = '7518885686:AAHpUsAwSnnW0HD3DzoGoRruTADzaS6dq50'
 URL = f'https://api.telegram.org/bot{TOKEN}/setWebhook'
-webhook_url = 'https://api.vercel.com/v1/integrations/deploy/prj_V60mLrw1lD8ydkVEeTltwtc31dmu/vyxMLgYyJm'  # URL вебхука вашего приложения
+webhook_url = 'https://api.vercel.com/v1/integrations/deploy/prj_V60mLrw1lD8ydkVEeTltwtc31dmu/vyxMLgYyJm'  # Замените на ваш домен
 
 # Установка вебхука при запуске приложения
 response = requests.post(URL, data={'url': webhook_url})
 print(response.json())
 
 app = Flask(__name__)
-@app.route('/test')
-def test():
-    return 'Test route is working!'
+
 @app.route('/')
 def index():
     """Главная страница с кнопкой для запуска бота."""
@@ -34,10 +32,30 @@ def start_bot():
 def webhook():
     """Маршрут для обработки обновлений от Telegram."""
     update = request.json
-    # Обработка обновления от Telegram
     print(update)  # Для отладки
 
+    chat_id = update['message']['chat']['id']
+    if 'text' in update['message']:
+        if update['message']['text'] == '/start':
+            send_welcome_message(chat_id)
+
     return '', 200
+
+def send_welcome_message(chat_id):
+    """Отправка приветственного сообщения с кнопкой 'Запустить'."""
+    keyboard = {
+        "inline_keyboard": [
+            [
+                {"text": "Запустить", "callback_data": "start_game"}
+            ]
+        ]
+    }
+    message = "Добро пожаловать! Нажмите кнопку ниже, чтобы начать."
+    requests.post(f'https://api.telegram.org/bot{TOKEN}/sendMessage', json={
+        'chat_id': chat_id,
+        'text': message,
+        'reply_markup': keyboard
+    })
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
