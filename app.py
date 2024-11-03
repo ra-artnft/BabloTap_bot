@@ -1,11 +1,28 @@
+from aiogram import Bot, Dispatcher, types
+from aiogram.utils import executor
 from flask import Flask, render_template, request, jsonify
 import os
 import requests
-
 # Ваш токен бота
 TOKEN = '7518885686:AAHpUsAwSnnW0HD3DzoGoRruTADzaS6dq50'
 URL = f'https://api.telegram.org/bot{TOKEN}/setWebhook'
 webhook_url = 'https://api.vercel.com/v1/integrations/deploy/prj_V60mLrw1lD8ydkVEeTltwtc31dmu/vyxMLgYyJm'  # Замените на ваш домен
+
+bot = Bot(token="TOKEN")
+dp = Dispatcher(bot)
+
+@dp.message_handler(commands=["start"])
+async def start(message: types.Message):
+    keyboard = types.InlineKeyboardMarkup()
+    web_app_button = types.InlineKeyboardButton(
+        text="Запустить BabloTap",
+        web_app=types.WebAppInfo(url="https://yourdomain.com")
+    )
+    keyboard.add(web_app_button)
+    await message.reply("Нажмите кнопку ниже, чтобы запустить игру!", reply_markup=keyboard)
+
+if __name__ == "__main__":
+    executor.start_polling(dp)
 
 # Установка вебхука при запуске приложения
 response = requests.post(URL, data={'url': webhook_url})
