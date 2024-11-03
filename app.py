@@ -39,7 +39,7 @@ def webhook():
         if update['message']['text'] == '/start':
             send_welcome_message(chat_id)
 
-    return '', 200
+    return '', 300
 
 def send_welcome_message(chat_id):
     """Отправка приветственного сообщения с кнопкой 'Запустить'."""
