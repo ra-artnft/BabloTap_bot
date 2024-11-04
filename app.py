@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.utils import executor
 from flask import Flask, render_template, request, jsonify
 import os
 import requests
@@ -8,8 +8,7 @@ import requests
 # Ваш токен бота
 TOKEN = '7518885686:AAHpUsAwSnnW0HD3DzoGoRruTADzaS6dq50'
 bot = Bot(token=TOKEN)
-storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
+dp = Dispatcher(bot)
 
 app = Flask(__name__)
 
@@ -23,7 +22,7 @@ def index():
 @app.route('/start-bot', methods=['POST'])
 def start_bot():
     """Маршрут для запуска бота (установка вебхука)."""
-    webhook_url = f'https://github.com/ra-artnft/BabloTap_bot/blob/7a0f994fcc195527991264435723f50e0b1dc6ac/app.py#L3'  # Замените на ваш домен
+    webhook_url = f'https://bablo-tap-bot.vercel.app/webhook'  # Замените на ваш домен
     URL = f'https://api.telegram.org/bot{TOKEN}/setWebhook'
 
     response = requests.post(URL, data={'url': webhook_url})
