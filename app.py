@@ -16,7 +16,7 @@ async def start(message: types.Message):
     keyboard = types.InlineKeyboardMarkup()
     web_app_button = types.InlineKeyboardButton(
         text="Запустить BabloTap",
-        web_app=types.WebAppInfo(url="https://yourdomain.com")
+        web_app=types.WebAppInfo(url="https://bablo-tap-bot.vercel.app/")
     )
     keyboard.add(web_app_button)
     await message.reply("Нажмите кнопку ниже, чтобы запустить игру!", reply_markup=keyboard)
