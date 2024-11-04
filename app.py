@@ -1,5 +1,6 @@
 from aiogram import Bot, Dispatcher, types
-from aiogram.utils import executor
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from flask import Flask, render_template, request, jsonify
 import os
 import requests
@@ -7,7 +8,8 @@ import requests
 # Ваш токен бота
 TOKEN = '7518885686:AAHpUsAwSnnW0HD3DzoGoRruTADzaS6dq50'
 bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+storage = MemoryStorage()
+dp = Dispatcher(bot, storage=storage)
 
 app = Flask(__name__)
 
@@ -21,7 +23,7 @@ def index():
 @app.route('/start-bot', methods=['POST'])
 def start_bot():
     """Маршрут для запуска бота (установка вебхука)."""
-    webhook_url = f'https://api.vercel.com/v1/integrations/deploy/prj_5iQDfSO2fjePAuTjLd9JLfOHP2YJ/b5y5AAYfbb'  # Замените на ваш домен
+    webhook_url = f'https://github.com/ra-artnft/BabloTap_bot/blob/7a0f994fcc195527991264435723f50e0b1dc6ac/app.py#L3'  # Замените на ваш домен
     URL = f'https://api.telegram.org/bot{TOKEN}/setWebhook'
 
     response = requests.post(URL, data={'url': webhook_url})
@@ -48,13 +50,13 @@ def webhook():
 
 def send_welcome_message(chat_id):
     """Отправка приветственного сообщения с кнопкой 'Запустить'."""
-    keyboard = {
-        "inline_keyboard": [
-            [
-                {"text": "Запустить BabloTap", "web_app": {"url": "https://bablo-tap-bot.vercel.app/"}}
-            ]
-        ]
-    }
+    keyboard = InlineKeyboardMarkup()
+    web_app_button = InlineKeyboardButton(
+        text="Запустить BabloTap",
+        web_app={"url": "https://bablo-tap-bot.vercel.app/"}
+    )
+    keyboard.add(web_app_button)
+
     message = "Добро пожаловать! Нажмите кнопку ниже, чтобы начать."
     requests.post(f'https://api.telegram.org/bot{TOKEN}/sendMessage', json={
         'chat_id': chat_id,
@@ -66,5 +68,3 @@ def send_welcome_message(chat_id):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-    # Запускаем бота
-    executor.start_polling(dp, skip_updates=True)
