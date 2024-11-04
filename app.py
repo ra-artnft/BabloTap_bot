@@ -9,7 +9,7 @@ URL = f'https://api.telegram.org/bot{TOKEN}/setWebhook'
 webhook_url = 'https://api.vercel.com/v1/integrations/deploy/prj_V60mLrw1lD8ydkVEeTltwtc31dmu/vyxMLgYyJm'  # Замените на ваш домен
 
 bot = Bot(token="TOKEN")
-dp = Dispatcher(bot)
+dp = Dispatcher(bot=bot)
 
 @dp.message_handler(commands=["start"])
 async def start(message: types.Message):
