@@ -21,7 +21,7 @@ def index():
 @app.route('/start-bot', methods=['POST'])
 def start_bot():
     """Маршрут для запуска бота (установка вебхука)."""
-    webhook_url = f'https://https://bablo-tap-bot.vercel.app/webhook'  # Замените на ваш домен
+    webhook_url = f'https://api.vercel.com/v1/integrations/deploy/prj_5iQDfSO2fjePAuTjLd9JLfOHP2YJ/b5y5AAYfbb'  # Замените на ваш домен
     URL = f'https://api.telegram.org/bot{TOKEN}/setWebhook'
 
     response = requests.post(URL, data={'url': webhook_url})
